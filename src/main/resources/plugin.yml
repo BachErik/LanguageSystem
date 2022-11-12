@@ -1,0 +1,7 @@
+name: LanguageSystem
+version: '${project.version}'
+main: de.bacherik.languagesystem.Start
+api-version: 1.19
+load: STARTUP
+authors: [ BachErik ]
+description: This System manages the Languages.
