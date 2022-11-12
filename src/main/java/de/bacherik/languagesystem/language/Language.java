@@ -2,6 +2,7 @@ package de.bacherik.languagesystem.language;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import de.niklas.nikapi.spigot.config.YAMLConfig;
 
 import java.io.*;
 import java.util.Map;
@@ -9,11 +10,13 @@ import java.util.Map;
 public class Language {
 
     private final String name;
+    private static String acronym;
 
     private JsonObject jsonObject;
 
     public Language(String name, String acronym) {
         this.name = name;
+        Language.acronym = acronym;
         try {
             this.jsonObject = (new JsonParser()).parse(new FileReader("languages\\" + acronym + "\\translations.json")).getAsJsonObject();
         } catch (Exception exception) {
@@ -47,11 +50,20 @@ public class Language {
     public String getValue(String key, LanguageReplaycement languageReplacement) {
         String value = getValue(key);
         for (Map.Entry<String, String> replacement : languageReplacement.getReplacements().entrySet())
-            value = value.replace("%" + (String)replacement.getKey() + "%", replacement.getValue());
+            value = value.replace("%" + (String) replacement.getKey() + "%", replacement.getValue());
         return value;
     }
 
     public String getName() {
         return this.name;
+    }
+
+    public void addEntry(String key, String value) {
+        try {
+            YAMLConfig config = new YAMLConfig("plugins/languages/" + acronym + ".yml");
+            config.addEntry(key, value);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
